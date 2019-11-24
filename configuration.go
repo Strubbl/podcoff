@@ -1,0 +1,56 @@
+package main
+
+import (
+	"encoding/json"
+	"io/ioutil"
+	"os"
+)
+
+const defaultConfigPath = "config.json"
+
+const defaultCachePath = "cache"
+const defaultDatabasePath = "data.db"
+const defaultDownloadsPath = "downloads"
+
+// Configuration holds the basic settings for the wallabag-offline application
+type Configuration struct {
+	CachePath     string
+	DatabasePath  string
+	DownloadsPath string
+}
+
+func getDefaultConfiguration() Configuration {
+	var c Configuration
+	c.CachePath = defaultCachePath
+	c.DatabasePath = defaultDatabasePath
+	c.DownloadsPath = defaultDownloadsPath
+	return c
+}
+
+func loadConfig() (Configuration, error) {
+	var config Configuration
+
+	if _, err := os.Stat(*configJSON); os.IsNotExist(err) {
+		// config does not exist, create default config and save that
+		c := getDefaultConfiguration()
+		b, err := json.MarshalIndent(c, "", "	")
+		if err != nil {
+			return config, err
+		}
+		err = ioutil.WriteFile(*configJSON, b, 0644)
+		if err != nil {
+			return config, err
+		}
+		return c, nil
+	}
+	file, err := os.Open(*configJSON)
+	if err != nil {
+		return config, err
+	}
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&config)
+	if err != nil {
+		return config, err
+	}
+	return config, nil
+}
