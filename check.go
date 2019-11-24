@@ -8,9 +8,7 @@ import (
 )
 
 func checkFeed(p Podcast, c Configuration) {
-	if cmd.Verbose {
-		fmt.Println("Checking", p.Name)
-	}
+	fmt.Println("Checking", p.Name, p.FeedURL)
 	pis, err := loadPodcastItems(p, c)
 	if err != nil {
 		fmt.Println("error loading podcast items for feed", p.Name, "error is:", err)

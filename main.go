@@ -95,7 +95,12 @@ func main() {
 		}
 	}
 
-	// add filter
+	//            _     _    __ _ _ _
+	//  __ _  __| | __| |  / _(_) | |_ ___ _ __
+	// / _` |/ _` |/ _` | | |_| | | __/ _ \ '__|
+	//| (_| | (_| | (_| | |  _| | | ||  __/ |
+	// \__,_|\__,_|\__,_| |_| |_|_|\__\___|_|
+	//
 	if cmd.AddFilterKeyword != "" && cmd.AddFilterPodcastName != "" {
 		if cmd.Debug {
 			log.Println("found addFilter flag")

@@ -40,9 +40,11 @@ func downloadItems(p Podcast, c Configuration) error {
 	return err
 }
 
+// doesFilterMatch returns true if a given filter matches the given item in the podcast
 func doesFilterMatch(item PodcastItem, f Filter) bool {
 	if f.Field == "" || f.Condition == "" || f.Keyword == "" {
-		return false
+		// no filter or no valid filter means we match all titles
+		return true
 	}
 	var field string
 	if f.Field == "title" {
@@ -65,7 +67,8 @@ func doesFilterMatch(item PodcastItem, f Filter) bool {
 	} else {
 		log.Fatalln("doesFilterMatch: Given filter condition is not IN or NOT. It's:", f.Condition)
 	}
-	return false
+	// if we really reach this return accept the item and report filter does match
+	return true
 }
 
 func downloadPodcastItem(item PodcastItem, p Podcast, c Configuration) error {
