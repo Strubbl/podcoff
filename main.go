@@ -11,5 +11,9 @@ func main() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	fmt.Println(c)
+	podcasts, err := loadPodcasts(c)
+	if err != nil {
+		fmt.Println(err)
+	}
+	fmt.Println(podcasts)
 }
