@@ -5,3 +5,5 @@ podcoff is a cli application to download podcasts. Until there is a release, thi
 It is inspired by [the famous greg](https://github.com/manolomartinez/greg) application, which is not actively maintained anymore.
 
 It is not intended to have a GUI. A graphical cli interface would be okay.
+
+Currently wget is needed for default download of podcasts. There is no internal, OS-independent download method yet.

@@ -10,7 +10,7 @@ const defaultConfigPath = "config.json"
 
 const defaultCachePath = "cache"
 const defaultDatabasePath = "podcasts.json"
-const defaultDownloadHandler = "internal"
+const defaultDownloadHandler = "wget"
 const defaultDownloadsPath = "downloads"
 const defaultMetadataPath = "metadata"
 

@@ -36,7 +36,7 @@ func loadPodcastItems(p Podcast, c Configuration) ([]PodcastItem, error) {
 		return pis, err
 	}
 	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&p)
+	err = decoder.Decode(&pis)
 	if err != nil {
 		return pis, err
 	}

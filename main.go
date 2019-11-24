@@ -54,7 +54,7 @@ func main() {
 			log.Println(err)
 		}
 		if len(podcasts) <= 0 {
-			log.Fatal("You have no podcasts added. Nothing to check for")
+			log.Fatal("You haven't any podcasts added. Nothing to check for")
 		}
 		for i := 0; i < len(podcasts); i++ {
 			checkFeed(podcasts[i], c)
@@ -71,7 +71,10 @@ func main() {
 			log.Println(err)
 		}
 		if len(podcasts) <= 0 {
-			log.Fatal("You have no podcasts added. Nothing to download")
+			log.Fatal("You haven't any podcasts added. Nothing to download")
+		}
+		for i := 0; i < len(podcasts); i++ {
+			downloadItems(podcasts[i], c)
 		}
 	}
 

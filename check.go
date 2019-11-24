@@ -13,13 +13,15 @@ func checkFeed(p Podcast, c Configuration) {
 	}
 	pis, err := loadPodcastItems(p, c)
 	if err != nil {
-		fmt.Println("error loading podcast items for feed", p.Name)
+		fmt.Println("error loading podcast items for feed", p.Name, "error is:", err)
 	}
 
 	fp := gofeed.NewParser()
 	feed, _ := fp.ParseURL(p.FeedURL)
 	for i := 0; i < len(feed.Items); i++ {
-		fmt.Println(feed.Items[i].Link)
+		if cmd.Verbose {
+			fmt.Println(p.Name, "- found link", feed.Items[i].Link)
+		}
 		isLinkKnown := false
 		for k := 0; k < len(pis); k++ {
 			if pis[k].Link == feed.Items[i].Link {
