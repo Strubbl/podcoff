@@ -12,7 +12,7 @@ type Podcast struct {
 	Name            string
 	FeedURL         string
 	DownloadHandler string
-	Filter          []string
+	Filters         []Filter
 }
 
 func loadPodcasts(c Configuration) ([]Podcast, error) {
