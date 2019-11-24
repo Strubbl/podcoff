@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"podcoff/cmd"
 )
 
 func main() {
@@ -26,4 +27,7 @@ func main() {
 	} else {
 		savePodcasts(podcasts, c)
 	}
+
+	cmd.Execute()
+
 }
