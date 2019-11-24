@@ -29,13 +29,12 @@ func downloadItems(p Podcast, c Configuration) error {
 				fmt.Println("Filter prevents downloading", p.Name, pis[i].Title, pis[i].Link, "--> skipped")
 				pis[i].Status = SKIPPED
 			}
-		}
-		err = savePodcastItems(pis, p, c)
-		if err != nil {
-			return err
+			err = savePodcastItems(pis, p, c)
+			if err != nil {
+				return err
+			}
 		}
 	}
-	err = savePodcastItems(pis, p, c)
 	return err
 }
 
