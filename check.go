@@ -37,6 +37,6 @@ func checkFeed(p Podcast, c Configuration) {
 	}
 	err = savePodcastItems(pis, p, c)
 	if err != nil {
-		fmt.Println("error loading podcast items for feed", p.Name)
+		fmt.Println("error loading podcast items for feed", p.Name, "error is:", err)
 	}
 }

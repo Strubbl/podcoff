@@ -8,7 +8,6 @@ import (
 
 const defaultConfigPath = "config.json"
 
-const defaultCachePath = "cache"
 const defaultDatabasePath = "podcasts.json"
 const defaultDownloadHandler = "wget"
 const defaultDownloadsPath = "downloads"
@@ -25,7 +24,6 @@ type Configuration struct {
 
 func getDefaultConfiguration() Configuration {
 	var c Configuration
-	c.CachePath = defaultCachePath
 	c.DatabasePath = defaultDatabasePath
 	c.DownloadHandler = defaultDownloadHandler
 	c.DownloadsPath = defaultDownloadsPath
@@ -61,7 +59,6 @@ func loadConfig(configPath string) (Configuration, error) {
 	if err != nil {
 		return config, err
 	}
-	createDirIfNotExists(config.CachePath)
 	createDirIfNotExists(config.DownloadsPath)
 	createDirIfNotExists(config.MetadataPath)
 	return config, nil
