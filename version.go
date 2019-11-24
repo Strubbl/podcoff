@@ -1,3 +1,3 @@
 package main
 
-const version = "even-before-pre-alpha"
+const version = "0.1"
