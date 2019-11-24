@@ -13,6 +13,8 @@
 *.out
 
 # project specific
+cache/
 config.json
+data.db
+downloads/
 podcoff
-
