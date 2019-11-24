@@ -43,4 +43,17 @@ func main() {
 		fmt.Println(version)
 		os.Exit(0)
 	}
+
+	// check for check command used
+	if cmd.Check {
+		podcasts, err := loadPodcasts(c)
+		if err != nil {
+			log.Println(err)
+		}
+		if len(podcasts) <= 0 {
+			log.Fatal("You have no podcasts added. Nothing to check for")
+		}
+
+	}
+
 }

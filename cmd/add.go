@@ -17,9 +17,8 @@ var addCmd = &cobra.Command{
 	Short: "Add podcast",
 	Long: `Add a new podcast to the database
 
-You need to give a name and the url in that order.
-The name should be one word and consist of characters, that you can use
-as file name on your file system.`,
+You need to give a name and the url in that order. The name should be one word
+and consist of characters, that you can use as file name on your file system.`,
 	Run: func(cmd *cobra.Command, args []string) {
 		if len(args) == numOfAddArgsAllowed {
 			AddName = args[0]
