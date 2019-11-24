@@ -2,31 +2,36 @@ package main
 
 import (
 	"fmt"
+	"log"
 	"os"
 	"podcoff/cmd"
 )
 
 func main() {
+	log.SetOutput(os.Stdout)
+	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	cmd.Execute()
 	c, err := loadConfig(cmd.ConfigJSON)
 	if err != nil {
-		fmt.Println(err)
+		log.Panic(err)
 	}
 
 	// check for add command used
 	if cmd.AddFeedURL != "" && cmd.AddName != "" {
-		fmt.Println("found add params")
+		if cmd.Debug {
+			log.Println("found add params", cmd.AddName, cmd.AddFeedURL)
+		}
 		podcasts, err := loadPodcasts(c)
 		if err != nil {
-			fmt.Println(err)
+			log.Println(err)
 		}
-		fmt.Println(podcasts)
-
+		if cmd.Debug {
+			log.Println(podcasts)
+		}
 		newPodcast, err := getPodcast(cmd.AddName, cmd.AddFeedURL)
 		podcasts, err = addPostcast(podcasts, newPodcast)
 		if err != nil {
-			fmt.Println(err)
-			os.Exit(1)
+			log.Panic(err)
 		} else {
 			savePodcasts(podcasts, c)
 		}
