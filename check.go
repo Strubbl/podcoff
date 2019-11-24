@@ -24,7 +24,7 @@ func checkFeed(p Podcast, c Configuration) {
 		for k := 0; k < len(pis); k++ {
 			if pis[k].Link == feed.Items[i].Link {
 				isLinkKnown = true
-				continue
+				break
 			}
 		}
 		if !isLinkKnown {
