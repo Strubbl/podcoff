@@ -20,9 +20,9 @@ func downloadItems(p Podcast, c Configuration) error {
 			if err != nil {
 				fmt.Println("Error downloading in podcast", p.Name, "the item", pis[i].Link, ":", err)
 				pis[i].Status = FAIL
-				continue
+			} else {
+				pis[i].Status = SUCCESS
 			}
-			pis[i].Status = SUCCESS
 		}
 		err = savePodcastItems(pis, p, c)
 		if err != nil {

@@ -33,6 +33,7 @@ func checkFeed(p Podcast, c Configuration) {
 			var item PodcastItem
 			item.Link = feed.Items[i].Link
 			item.Status = FRESH
+			item.Title = feed.Items[i].Title
 			pis = append(pis, item)
 		}
 	}

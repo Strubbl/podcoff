@@ -20,6 +20,7 @@ const (
 type PodcastItem struct {
 	Link   string
 	Status int
+	Title  string
 }
 
 func loadPodcastItems(p Podcast, c Configuration) ([]PodcastItem, error) {
