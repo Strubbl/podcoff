@@ -12,6 +12,7 @@ const defaultCachePath = "cache"
 const defaultDatabasePath = "podcasts.json"
 const defaultDownloadHandler = "internal"
 const defaultDownloadsPath = "downloads"
+const defaultMetadataPath = "metadata"
 
 // Configuration holds the basic settings for the wallabag-offline application
 type Configuration struct {
@@ -19,6 +20,7 @@ type Configuration struct {
 	DatabasePath    string
 	DownloadHandler string
 	DownloadsPath   string
+	MetadataPath    string
 }
 
 func getDefaultConfiguration() Configuration {
@@ -27,6 +29,7 @@ func getDefaultConfiguration() Configuration {
 	c.DatabasePath = defaultDatabasePath
 	c.DownloadHandler = defaultDownloadHandler
 	c.DownloadsPath = defaultDownloadsPath
+	c.MetadataPath = defaultMetadataPath
 	return c
 }
 
@@ -58,5 +61,14 @@ func loadConfig(configPath string) (Configuration, error) {
 	if err != nil {
 		return config, err
 	}
+	createDirIfNotExists(config.CachePath)
+	createDirIfNotExists(config.DownloadsPath)
+	createDirIfNotExists(config.MetadataPath)
 	return config, nil
+}
+
+func createDirIfNotExists(path string) {
+	if _, err := os.Stat(path); os.IsNotExist(err) {
+		os.Mkdir(path, 0755)
+	}
 }

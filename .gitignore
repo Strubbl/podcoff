@@ -16,5 +16,6 @@
 cache/
 config.json
 downloads/
+metadata/
 podcasts.json
 podcoff

@@ -49,7 +49,7 @@ func savePodcasts(p []Podcast, c Configuration) error {
 
 func getPodcast(name string, url string) (Podcast, error) {
 	var p Podcast
-	err := checkPodcast(name, url)
+	err := checkPodcastNameAndFeedNotEmpty(name, url)
 	if err != nil {
 		return p, err
 	}
@@ -58,7 +58,7 @@ func getPodcast(name string, url string) (Podcast, error) {
 	return p, nil
 }
 
-func checkPodcast(name string, url string) error {
+func checkPodcastNameAndFeedNotEmpty(name string, url string) error {
 	if name == "" || url == "" {
 		return errors.New("getPodcast: name and url shall not be empty")
 	}
@@ -66,7 +66,7 @@ func checkPodcast(name string, url string) error {
 }
 
 func addPostcast(podcasts []Podcast, newPodcast Podcast) ([]Podcast, error) {
-	err := checkPodcast(newPodcast.Name, newPodcast.FeedURL)
+	err := checkPodcastNameAndFeedNotEmpty(newPodcast.Name, newPodcast.FeedURL)
 	if err != nil {
 		return podcasts, err
 	}

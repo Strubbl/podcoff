@@ -56,7 +56,24 @@ func main() {
 		if len(podcasts) <= 0 {
 			log.Fatal("You have no podcasts added. Nothing to check for")
 		}
-
+		for i := 0; i < len(podcasts); i++ {
+			checkFeed(podcasts[i], c)
+		}
 	}
+
+	// check for download command used
+	if cmd.Download {
+		if cmd.Debug {
+			log.Println("found download flag")
+		}
+		podcasts, err := loadPodcasts(c)
+		if err != nil {
+			log.Println(err)
+		}
+		if len(podcasts) <= 0 {
+			log.Fatal("You have no podcasts added. Nothing to download")
+		}
+	}
+
 	log.Println("Finish program")
 }
