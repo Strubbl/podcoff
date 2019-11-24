@@ -17,6 +17,7 @@ var rootCmd = &cobra.Command{
 	Use:   "podcoff",
 	Short: "podcoff is a cli application to download podcasts.",
 	Long: `podcoff is a cli application to download podcasts.
+
 It is inspired by the famous greg application, which is not actively maintained anymore.`,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:

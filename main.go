@@ -32,4 +32,10 @@ func main() {
 		}
 		os.Exit(0)
 	}
+
+	// check for add command used
+	if cmd.Version {
+		fmt.Println(version)
+		os.Exit(0)
+	}
 }
