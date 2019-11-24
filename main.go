@@ -13,7 +13,7 @@ func main() {
 	cmd.Execute()
 	c, err := loadConfig(cmd.ConfigJSON)
 	if err != nil {
-		log.Panic(err)
+		log.Fatal(err)
 	}
 
 	// check for add command used
@@ -31,7 +31,7 @@ func main() {
 		newPodcast, err := getPodcast(cmd.AddName, cmd.AddFeedURL)
 		podcasts, err = addPostcast(podcasts, newPodcast)
 		if err != nil {
-			log.Panic(err)
+			log.Fatal(err)
 		} else {
 			savePodcasts(podcasts, c)
 		}
@@ -46,6 +46,9 @@ func main() {
 
 	// check for check command used
 	if cmd.Check {
+		if cmd.Debug {
+			log.Println("found check flag")
+		}
 		podcasts, err := loadPodcasts(c)
 		if err != nil {
 			log.Println(err)
@@ -55,5 +58,5 @@ func main() {
 		}
 
 	}
-
+	log.Println("Finish program")
 }

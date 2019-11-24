@@ -8,7 +8,6 @@ import (
 )
 
 var ConfigJSON string
-var Check bool
 var Debug bool
 var Download bool
 var Verbose bool
@@ -40,7 +39,6 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&ConfigJSON, "config", "", "config file (default is defaultConfigJSON)")
-	rootCmd.PersistentFlags().BoolVarP(&Check, "check", "c", false, "fetch feeds and check for new podcasts, but do not download them")
 	rootCmd.PersistentFlags().BoolVarP(&Download, "download", "d", false, "download new podcasts")
 	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "", false, "debug output")
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "", false, "verbose output")
