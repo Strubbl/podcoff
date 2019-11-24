@@ -7,10 +7,12 @@ import (
 	"github.com/spf13/cobra"
 )
 
+var ConfigJSON string
+var Check bool
+var Debug bool
+var Download bool
 var Verbose bool
 var Version bool
-var Debug bool
-var ConfigJSON string
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{
@@ -38,7 +40,9 @@ func init() {
 	// Cobra supports persistent flags, which, if defined here,
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&ConfigJSON, "config", "", "config file (default is defaultConfigJSON)")
-	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "d", false, "debug output")
+	rootCmd.PersistentFlags().BoolVarP(&Check, "check", "c", false, "fetch feeds and check for new podcasts, but do not download them")
+	rootCmd.PersistentFlags().BoolVarP(&Download, "download", "d", false, "download new podcasts")
+	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "", false, "debug output")
 	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "", false, "verbose output")
 	rootCmd.PersistentFlags().BoolVarP(&Version, "version", "v", false, "print version")
 }
