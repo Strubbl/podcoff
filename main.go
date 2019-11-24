@@ -95,6 +95,36 @@ func main() {
 		}
 	}
 
+	// add filter
+	if cmd.AddFilterKeyword != "" && cmd.AddFilterPodcastName != "" {
+		if cmd.Debug {
+			log.Println("found addFilter flag")
+		}
+		podcasts, err := loadPodcasts(c)
+		if err != nil {
+			log.Println(err)
+		}
+		if len(podcasts) <= 0 {
+			log.Fatal("You haven't any podcasts added. Not possible to add a filter to a podcast")
+		}
+		f, err := getFilter(cmd.AddFilterCondition, cmd.AddFilterField, cmd.AddFilterKeyword)
+		if err != nil {
+			fmt.Println("Error creating filter:", err)
+			os.Exit(1)
+		}
+		podcasts, err = addFilterToPostcast(f, cmd.AddFilterPodcastName, podcasts)
+		if err != nil {
+			fmt.Println("Failed adding filter to podcast", cmd.AddFilterPodcastName, "with error:", err)
+			os.Exit(1)
+		}
+		err = savePodcasts(podcasts, c)
+		if err != nil {
+			fmt.Println("Error while saving podcasts config file:", err)
+			os.Exit(1)
+		}
+		fmt.Println("Added filter", f, "to podcast", cmd.AddFilterPodcastName)
+	}
+
 	if cmd.Debug {
 		log.Println("Finish program")
 	}
