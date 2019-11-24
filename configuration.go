@@ -30,23 +30,26 @@ func getDefaultConfiguration() Configuration {
 	return c
 }
 
-func loadConfig() (Configuration, error) {
+func loadConfig(configPath string) (Configuration, error) {
 	var config Configuration
 
-	if _, err := os.Stat(*configJSON); os.IsNotExist(err) {
+	if configPath == "" {
+		configPath = defaultConfigPath
+	}
+	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		// config does not exist, create default config and save that
 		c := getDefaultConfiguration()
 		b, err := json.MarshalIndent(c, "", "	")
 		if err != nil {
 			return config, err
 		}
-		err = ioutil.WriteFile(*configJSON, b, 0644)
+		err = ioutil.WriteFile(configPath, b, 0644)
 		if err != nil {
 			return config, err
 		}
 		return c, nil
 	}
-	file, err := os.Open(*configJSON)
+	file, err := os.Open(configPath)
 	if err != nil {
 		return config, err
 	}

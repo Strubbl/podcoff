@@ -6,9 +6,8 @@ import (
 )
 
 func main() {
-	fmt.Println("Hello World!")
-	handleFlags()
-	c, err := loadConfig()
+	cmd.Execute()
+	c, err := loadConfig(cmd.ConfigJSON)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -27,7 +26,4 @@ func main() {
 	} else {
 		savePodcasts(podcasts, c)
 	}
-
-	cmd.Execute()
-
 }
