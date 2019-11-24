@@ -2,6 +2,7 @@ package main
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"os"
 )
@@ -44,4 +45,36 @@ func savePodcasts(p []Podcast, c Configuration) error {
 		return err
 	}
 	return nil
+}
+
+func getPodcast(name string, url string) (Podcast, error) {
+	var p Podcast
+	err := checkPodcast(name, url)
+	if err != nil {
+		return p, err
+	}
+	p.Name = name
+	p.FeedURL = url
+	return p, nil
+}
+
+func checkPodcast(name string, url string) error {
+	if name == "" || url == "" {
+		return errors.New("getPodcast: name and url shall not be empty")
+	}
+	return nil
+}
+
+func addPostcast(podcasts []Podcast, newPodcast Podcast) ([]Podcast, error) {
+	err := checkPodcast(newPodcast.Name, newPodcast.FeedURL)
+	if err != nil {
+		return podcasts, err
+	}
+	for i := 0; i < len(podcasts); i++ {
+		if podcasts[i].Name == newPodcast.Name || podcasts[i].FeedURL == newPodcast.FeedURL {
+			return podcasts, errors.New("addPostcast: a podcast with that name or feed url is already in the database")
+		}
+	}
+	podcasts = append(podcasts, newPodcast)
+	return podcasts, nil
 }

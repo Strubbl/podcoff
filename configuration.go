@@ -10,19 +10,22 @@ const defaultConfigPath = "config.json"
 
 const defaultCachePath = "cache"
 const defaultDatabasePath = "podcasts.json"
+const defaultDownloadHandler = "internal"
 const defaultDownloadsPath = "downloads"
 
 // Configuration holds the basic settings for the wallabag-offline application
 type Configuration struct {
-	CachePath     string
-	DatabasePath  string
-	DownloadsPath string
+	CachePath       string
+	DatabasePath    string
+	DownloadHandler string
+	DownloadsPath   string
 }
 
 func getDefaultConfiguration() Configuration {
 	var c Configuration
 	c.CachePath = defaultCachePath
 	c.DatabasePath = defaultDatabasePath
+	c.DownloadHandler = defaultDownloadHandler
 	c.DownloadsPath = defaultDownloadsPath
 	return c
 }
