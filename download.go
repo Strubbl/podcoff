@@ -1,14 +1,12 @@
 package main
 
 import (
+	"errors"
 	"fmt"
-	"log"
-	"os"
 	"os/exec"
 	"podcoff/cmd"
 	"strings"
 	"sync"
-	"syscall"
 )
 
 func downloadItems(p Podcast, c Configuration) error {
@@ -21,62 +19,58 @@ func downloadItems(p Podcast, c Configuration) error {
 			err = downloadPodcastItem(pis[i].Link, p, c)
 			if err != nil {
 				fmt.Println("Error downloading in podcast", p.Name, "the item", pis[i].Link, ":", err)
+				pis[i].Status = FAIL
+				continue
 			}
+			pis[i].Status = SUCCESS
+		}
+		err = savePodcastItems(pis, p, c)
+		if err != nil {
+			return err
 		}
 	}
-	return nil
+	err = savePodcastItems(pis, p, c)
+	return err
 }
 
 func downloadPodcastItem(url string, p Podcast, c Configuration) error {
-	var command string
-	var downloadHandler string
-	var args []string
-
+	fmt.Println("Downloading", p.Name, url)
 	downloadFolder := c.DownloadsPath + "/" + p.Name
 	createDirIfNotExists(downloadFolder)
+	var downloadHandler string
 	if p.DownloadHandler == "" {
-		downloadHandler = defaultDownloadHandler
+		downloadHandler = c.DownloadHandler
 	} else {
 		downloadHandler = p.DownloadHandler
 	}
-	downloadHandlerParams := strings.Fields(downloadHandler)
-	if len(downloadHandlerParams) > 1 {
-		args = append(downloadHandlerParams[1:], url)
-		command = downloadHandlerParams[0]
-	} else {
-		args = append(args, url)
-		command = downloadHandler
+	if downloadHandler == "" {
+		return errors.New("No download handler defined to the podcast or in the config")
 	}
-	binary, err := exec.LookPath(command)
-	if err != nil {
-		return err
-	}
-	env := os.Environ()
+	command := downloadHandler + " " + url
+	var wg sync.WaitGroup
+	wg.Add(1)
+	out, err := exe_cmd(downloadFolder, command, &wg)
 	if cmd.Debug {
-		log.Println("downloadPodcastItem: binary is", binary)
-		log.Println("downloadPodcastItem: args are", args)
+		if out != "" {
+			fmt.Println("downloadPodcastItem: command output:\n", out)
+		}
 	}
-	err = syscall.Exec(binary, args, env)
-	if err != nil {
-		return err
-	}
-	return nil
+	return err
 }
 
-// https://stackoverflow.com/a/20438245/709697
-func exe_cmd(cmd string, wg *sync.WaitGroup) {
+// based on https://stackoverflow.com/a/20438245/709697
+func exe_cmd(directory string, command string, wg *sync.WaitGroup) (string, error) {
 	if cmd.Debug {
-		fmt.Println("command is ", cmd)
+		fmt.Println("exe_cmd: command is", command)
 	}
 	// splitting head => g++ parts => rest of the command
-	parts := strings.Fields(cmd)
+	parts := strings.Fields(command)
 	head := parts[0]
 	parts = parts[1:len(parts)]
 
-	out, err := exec.Command(head, parts...).Output()
-	if err != nil {
-		fmt.Printf("%s", err)
-	}
-	fmt.Printf("%s", out)
-	wg.Done() // Need to signal to waitgroup that this goroutine is done
+	execCmd := exec.Command(head, parts...)
+	execCmd.Dir = directory
+	out, err := execCmd.Output()
+	wg.Done()
+	return string(out), err
 }
