@@ -14,6 +14,7 @@ const (
 	FRESH = iota
 	SUCCESS
 	FAIL
+	SKIPPED
 )
 
 // Podcast represents one podcast item with its metadata
