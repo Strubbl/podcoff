@@ -9,7 +9,7 @@ import (
 const defaultConfigPath = "config.json"
 
 const defaultCachePath = "cache"
-const defaultDatabasePath = "data.db"
+const defaultDatabasePath = "podcasts.json"
 const defaultDownloadsPath = "downloads"
 
 // Configuration holds the basic settings for the wallabag-offline application
