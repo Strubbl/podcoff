@@ -15,6 +15,6 @@
 # project specific
 cache/
 config.json
-data.db
 downloads/
+podcasts.json
 podcoff
