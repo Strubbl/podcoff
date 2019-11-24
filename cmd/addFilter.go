@@ -21,7 +21,7 @@ var addFilterCmd = &cobra.Command{
 func init() {
 	addFilterCmd.Flags().StringVarP(&AddFilterCondition, "condition", "", "NOT", "condition, currently only IN or NOT")
 	addFilterCmd.Flags().StringVarP(&AddFilterField, "field", "", "title", "which field of the feed item, currently only title")
-	addFilterCmd.Flags().StringVarP(&AddFilterKeyword, "keyword", "", "", "keyword to search for in the field")
+	addFilterCmd.Flags().StringVarP(&AddFilterKeyword, "keyword", "", "", "keyword to search for in the field (not case-sensitive")
 	addFilterCmd.Flags().StringVarP(&AddFilterPodcastName, "podcast", "", "", "name of the podcast the filter shall be added to")
 	addFilterCmd.MarkFlagRequired("keyword")
 	addFilterCmd.MarkFlagRequired("podcast")
