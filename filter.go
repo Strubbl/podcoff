@@ -15,6 +15,23 @@ type Filter struct {
 	Field     string // currently only title
 }
 
+func (p *Podcoff) AddFilter(condition, field, keyword, podcastName string) error {
+	podcasts := (*p).Podcasts
+	if len(podcasts) <= 0 {
+		return errors.New("You haven't any podcasts added. Not possible to add a filter to a podcast")
+	}
+	f, err := getFilter(condition, field, keyword)
+	if err != nil {
+		return errors.New(strings.Join([]string{"Error creating filter:", err.Error()}, " "))
+	}
+	podcasts, err = addFilterToPostcast(f, podcastName, podcasts)
+	if err != nil {
+		return errors.New(strings.Join([]string{"Failed adding filter to podcast", podcastName, "with error:", err.Error()}, " "))
+
+	}
+	return nil
+}
+
 func getFilter(condition, field, keyword string) (Filter, error) {
 	var f Filter
 	if condition == "" || field == "" || keyword == "" {

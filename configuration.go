@@ -3,6 +3,7 @@ package podcoff
 import (
 	"encoding/json"
 	"io/ioutil"
+	"log"
 	"os"
 )
 
@@ -13,7 +14,7 @@ const defaultDownloadHandler = "wget"
 const defaultDownloadsPath = "downloads"
 const defaultMetadataPath = "metadata"
 
-// Configuration holds the basic settings for the wallabag-offline application
+// Configuration file for podcoff
 type Configuration struct {
 	CachePath       string
 	DatabasePath    string
@@ -31,37 +32,47 @@ func getDefaultConfiguration() Configuration {
 	return c
 }
 
-func loadConfig(configPath string) (Configuration, error) {
-	var config Configuration
-
+func (p *Podcoff) loadConfig(configPath string) error {
 	if configPath == "" {
 		configPath = defaultConfigPath
+		if p.Debug {
+			log.Println("no configPath given, using default path:", configPath)
+		}
 	}
 	if _, err := os.Stat(configPath); os.IsNotExist(err) {
 		// config does not exist, create default config and save that
-		c := getDefaultConfiguration()
-		b, err := json.MarshalIndent(c, "", "	")
+		if p.Debug {
+			log.Println("config does not exist, creating a default config")
+		}
+		(*p).Config = getDefaultConfiguration()
+		if p.Debug {
+			log.Println("config is set to", p.Config)
+		}
+		b, err := json.MarshalIndent(p.Config, "", "	")
 		if err != nil {
-			return config, err
+			return err
 		}
 		err = ioutil.WriteFile(configPath, b, 0644)
 		if err != nil {
-			return config, err
+			return err
 		}
-		return c, nil
+		return nil
 	}
 	file, err := os.Open(configPath)
 	if err != nil {
-		return config, err
+		return err
 	}
 	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&config)
+	err = decoder.Decode(&p.Config)
 	if err != nil {
-		return config, err
+		return err
 	}
-	createDirIfNotExists(config.DownloadsPath)
-	createDirIfNotExists(config.MetadataPath)
-	return config, nil
+	if p.Debug {
+		log.Println("Config loaded:", (*p).Config)
+	}
+	createDirIfNotExists((*p).Config.DownloadsPath)
+	createDirIfNotExists((*p).Config.MetadataPath)
+	return nil
 }
 
 func createDirIfNotExists(path string) {

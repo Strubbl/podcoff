@@ -1,25 +1,41 @@
 package podcoff
 
 import (
-	"fmt"
-
-	"github.com/strubbl/podcoff/cmd"
+	"errors"
+	"log"
+	"strings"
 
 	"github.com/mmcdole/gofeed"
 )
 
-func checkFeed(p Podcast, c Configuration) {
-	fmt.Println("Checking", p.Name, p.FeedURL)
-	pis, err := loadPodcastItems(p, c)
+func (p *Podcoff) CheckPodcasts() error {
+	podcasts := (*p).Podcasts
+	if len(podcasts) <= 0 {
+		return errors.New("You haven't any podcasts added. Nothing to check for")
+	}
+	for i := 0; i < len(podcasts); i++ {
+		err := (*p).checkFeed(podcasts[i], p.Verbose)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (p *Podcoff) checkFeed(pc Podcast, verbose bool) error {
+	if p.Verbose {
+		log.Println("Checking", pc.Name, pc.FeedURL)
+	}
+	pis, err := p.loadPodcastItems(pc)
 	if err != nil {
-		fmt.Println("error loading podcast items for feed", p.Name, "error is:", err)
+		return errors.New(strings.Join([]string{"error loading podcast items for feed", pc.Name, "error is:", err.Error()}, " "))
 	}
 
 	fp := gofeed.NewParser()
-	feed, _ := fp.ParseURL(p.FeedURL)
+	feed, _ := fp.ParseURL(pc.FeedURL)
 	for i := 0; i < len(feed.Items); i++ {
-		if cmd.Verbose {
-			fmt.Println(p.Name, "- found link", feed.Items[i].Link)
+		if p.Verbose {
+			log.Println(pc.Name, "- found link", feed.Items[i].Link)
 		}
 		isLinkKnown := false
 		for k := 0; k < len(pis); k++ {
@@ -36,8 +52,9 @@ func checkFeed(p Podcast, c Configuration) {
 			pis = append(pis, item)
 		}
 	}
-	err = savePodcastItems(pis, p, c)
+	err = p.savePodcastItems(pis, pc)
 	if err != nil {
-		fmt.Println("error loading podcast items for feed", p.Name, "error is:", err)
+		return errors.New(strings.Join([]string{"error loading podcast items for feed", pc.Name, "error is:", err.Error()}, " "))
 	}
+	return nil
 }

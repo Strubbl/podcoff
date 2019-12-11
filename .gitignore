@@ -18,4 +18,5 @@ config.json
 downloads/
 metadata/
 podcasts.json
-./podcoff
+/podcoff
+/cmd/podcoff/podcoff

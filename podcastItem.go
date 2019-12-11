@@ -24,10 +24,10 @@ type PodcastItem struct {
 	Title  string
 }
 
-func loadPodcastItems(p Podcast, c Configuration) ([]PodcastItem, error) {
+func (p *Podcoff) loadPodcastItems(pc Podcast) ([]PodcastItem, error) {
 	var pis []PodcastItem
 
-	podcastItemDataPath := c.MetadataPath + "/" + p.Name + jsonFileEnding
+	podcastItemDataPath := p.Config.MetadataPath + "/" + pc.Name + jsonFileEnding
 	if _, err := os.Stat(podcastItemDataPath); os.IsNotExist(err) {
 		// return nil as error cause it's okay to have no podcast database, so
 		// we just start with an empty one
@@ -45,12 +45,12 @@ func loadPodcastItems(p Podcast, c Configuration) ([]PodcastItem, error) {
 	return pis, nil
 }
 
-func savePodcastItems(pis []PodcastItem, p Podcast, c Configuration) error {
+func (p *Podcoff) savePodcastItems(pis []PodcastItem, pc Podcast) error {
 	b, err := json.MarshalIndent(pis, "", "	")
 	if err != nil {
 		return err
 	}
-	podcastItemDataPath := c.MetadataPath + "/" + p.Name + jsonFileEnding
+	podcastItemDataPath := p.Config.MetadataPath + "/" + pc.Name + jsonFileEnding
 	err = ioutil.WriteFile(podcastItemDataPath, b, 0644)
 	if err != nil {
 		return err

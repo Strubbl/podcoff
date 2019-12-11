@@ -3,6 +3,7 @@ package podcoff
 import (
 	"errors"
 	"fmt"
+	"log"
 	"os/exec"
 	"strings"
 	"sync"
@@ -10,27 +11,40 @@ import (
 	"github.com/strubbl/podcoff/cmd"
 )
 
-func downloadItems(p Podcast, c Configuration) error {
-	pis, err := loadPodcastItems(p, c)
+func (p *Podcoff) DownloadPodcasts() error {
+	podcasts := (*p).Podcasts
+	if len(podcasts) <= 0 {
+		log.Fatal("You haven't any podcasts added. Nothing to download")
+	}
+	for i := 0; i < len(podcasts); i++ {
+		p.downloadItems(podcasts[i])
+	}
+	return nil
+}
+
+func (p *Podcoff) downloadItems(pc Podcast) error {
+	pis, err := p.loadPodcastItems(pc)
 	if err != nil {
 		return err
 	}
 	for i := 0; i < len(pis); i++ {
 		if pis[i].Status == FRESH {
-			filterMatched := doesFilterMatch(pis[i], p.Filter)
+			filterMatched := doesFilterMatch(pis[i], pc.Filter)
 			if filterMatched {
-				err = downloadPodcastItem(pis[i], p, c)
+				err = p.downloadPodcastItem(pis[i], pc)
 				if err != nil {
-					fmt.Println("Error downloading in podcast", p.Name, "the item", pis[i].Link, ":", err)
+					log.Println("Error downloading in podcast", pc.Name, "the item", pis[i].Link, ":", err)
 					pis[i].Status = FAIL
 				} else {
 					pis[i].Status = SUCCESS
 				}
 			} else {
-				fmt.Println("Filter prevents downloading", p.Name, pis[i].Title, pis[i].Link, "--> skipped")
+				if p.Verbose {
+					log.Println("Filter prevents downloading", pc.Name, pis[i].Title, pis[i].Link, "--> skipped")
+				}
 				pis[i].Status = SKIPPED
 			}
-			err = savePodcastItems(pis, p, c)
+			err = p.savePodcastItems(pis, pc)
 			if err != nil {
 				return err
 			}
@@ -39,15 +53,17 @@ func downloadItems(p Podcast, c Configuration) error {
 	return err
 }
 
-func downloadPodcastItem(item PodcastItem, p Podcast, c Configuration) error {
-	fmt.Println("Downloading", p.Name, item.Title, item.Link)
-	downloadFolder := c.DownloadsPath + "/" + p.Name
+func (p *Podcoff) downloadPodcastItem(item PodcastItem, pc Podcast) error {
+	if p.Verbose {
+		log.Println("Downloading", pc.Name, item.Title, item.Link)
+	}
+	downloadFolder := p.Config.DownloadsPath + "/" + pc.Name
 	createDirIfNotExists(downloadFolder)
 	var downloadHandler string
-	if p.DownloadHandler == "" {
-		downloadHandler = c.DownloadHandler
+	if pc.DownloadHandler == "" {
+		downloadHandler = p.Config.DownloadHandler
 	} else {
-		downloadHandler = p.DownloadHandler
+		downloadHandler = pc.DownloadHandler
 	}
 	if downloadHandler == "" {
 		return errors.New("No download handler defined to the podcast or in the config")
@@ -56,10 +72,8 @@ func downloadPodcastItem(item PodcastItem, p Podcast, c Configuration) error {
 	var wg sync.WaitGroup
 	wg.Add(1)
 	out, err := exe_cmd(downloadFolder, command, &wg)
-	if cmd.Debug {
-		if out != "" {
-			fmt.Println("downloadPodcastItem: command output:\n", out)
-		}
+	if p.Debug && out != "" {
+		fmt.Println("downloadPodcastItem: command output:\n", out)
 	}
 	return err
 }
@@ -67,7 +81,7 @@ func downloadPodcastItem(item PodcastItem, p Podcast, c Configuration) error {
 // based on https://stackoverflow.com/a/20438245/709697
 func exe_cmd(directory string, command string, wg *sync.WaitGroup) (string, error) {
 	if cmd.Debug {
-		fmt.Println("exe_cmd: command is", command)
+		fmt.Println("exec command is:", command)
 	}
 	// splitting head => g++ parts => rest of the command
 	parts := strings.Fields(command)

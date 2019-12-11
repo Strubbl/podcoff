@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// Podcast represents one podcast with its metadata, name, url, download handler etc.
+// podcast represents one podcast with its metadata, name, url, download handler etc.
 type Podcast struct {
 	Name            string
 	FeedURL         string
@@ -15,39 +15,56 @@ type Podcast struct {
 	Filter          Filter
 }
 
-func loadPodcasts(c Configuration) ([]Podcast, error) {
-	var p []Podcast
-
-	if _, err := os.Stat(c.DatabasePath); os.IsNotExist(err) {
+func (p *Podcoff) loadPodcasts() error {
+	if _, err := os.Stat((*p).Config.DatabasePath); os.IsNotExist(err) {
 		// return nil as error cause it's okay to have no podcast database, so
 		// we just start with an empty one
-		return p, nil
+		return nil
 	}
-	file, err := os.Open(c.DatabasePath)
-	if err != nil {
-		return p, err
-	}
-	decoder := json.NewDecoder(file)
-	err = decoder.Decode(&p)
-	if err != nil {
-		return p, err
-	}
-	return p, nil
-}
-
-func savePodcasts(p []Podcast, c Configuration) error {
-	b, err := json.MarshalIndent(p, "", "	")
+	file, err := os.Open((*p).Config.DatabasePath)
 	if err != nil {
 		return err
 	}
-	err = ioutil.WriteFile(c.DatabasePath, b, 0644)
+	decoder := json.NewDecoder(file)
+	err = decoder.Decode(&p.Podcasts)
 	if err != nil {
 		return err
 	}
 	return nil
 }
 
-func getPodcast(name string, url string) (Podcast, error) {
+func (p *Podcoff) SavePodcasts() error {
+	b, err := json.MarshalIndent((*p).Podcasts, "", "	")
+	if err != nil {
+		return err
+	}
+	err = ioutil.WriteFile((*p).Config.DatabasePath, b, 0644)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
+func (p *Podcoff) AddPostcast(name string, url string) error {
+	newPodcast, err := createPodcast(name, url)
+	if err != nil {
+		return err
+	}
+	err = checkPodcastNameAndFeedNotEmpty(newPodcast.Name, newPodcast.FeedURL)
+	if err != nil {
+		return err
+	}
+	podcasts := (*p).Podcasts
+	for i := 0; i < len(podcasts); i++ {
+		if podcasts[i].Name == newPodcast.Name || podcasts[i].FeedURL == newPodcast.FeedURL {
+			return errors.New("addPostcast: a podcast with that name or feed url is already in the database")
+		}
+	}
+	podcasts = append(podcasts, newPodcast)
+	return nil
+}
+
+func createPodcast(name string, url string) (Podcast, error) {
 	var p Podcast
 	err := checkPodcastNameAndFeedNotEmpty(name, url)
 	if err != nil {
@@ -60,21 +77,7 @@ func getPodcast(name string, url string) (Podcast, error) {
 
 func checkPodcastNameAndFeedNotEmpty(name string, url string) error {
 	if name == "" || url == "" {
-		return errors.New("getPodcast: name and url shall not be empty")
+		return errors.New("checkPodcastNameAndFeedNotEmpty: name and url shall not be empty")
 	}
 	return nil
-}
-
-func addPostcast(podcasts []Podcast, newPodcast Podcast) ([]Podcast, error) {
-	err := checkPodcastNameAndFeedNotEmpty(newPodcast.Name, newPodcast.FeedURL)
-	if err != nil {
-		return podcasts, err
-	}
-	for i := 0; i < len(podcasts); i++ {
-		if podcasts[i].Name == newPodcast.Name || podcasts[i].FeedURL == newPodcast.FeedURL {
-			return podcasts, errors.New("addPostcast: a podcast with that name or feed url is already in the database")
-		}
-	}
-	podcasts = append(podcasts, newPodcast)
-	return podcasts, nil
 }

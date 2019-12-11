@@ -1,29 +1,43 @@
-package podcoff
+package main
 
 import (
 	"fmt"
 	"log"
 	"os"
+
 	"github.com/strubbl/podcoff"
+	"github.com/strubbl/podcoff/cmd"
 )
 
 func main() {
 	log.SetOutput(os.Stdout)
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	cmd.Execute()
-	c, err := loadConfig(cmd.ConfigJSON)
-	if err != nil {
-		log.Fatal(err)
-	}
 
 	// root command flags
 	// check for add command used
 	if cmd.Version {
-		fmt.Println(version)
+		fmt.Println(podcoff.Version)
 		os.Exit(0)
 	}
 
+	p := &podcoff.Podcoff{}
 	// subcommands
+	// for all following command blocks we need the initialized podcoff instance
+	if cmd.Debug {
+		log.Println("Detected debug flag, activating it in Podcoff")
+		(*p).Debug = true
+		(*p).Verbose = true
+	}
+	if cmd.Verbose {
+		log.Println("Verbose output")
+		(*p).Verbose = true
+	}
+	err := p.Init(cmd.ConfigJSON)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	//           _     _    __               _
 	//  __ _  __| | __| |  / _| ___  ___  __| |
 	// / _` |/ _` |/ _` | | |_ / _ \/ _ \/ _` |
@@ -34,19 +48,14 @@ func main() {
 		if cmd.Debug {
 			log.Println("found add params", cmd.AddName, cmd.AddFeedURL)
 		}
-		podcasts, err := loadPodcasts(c)
-		if err != nil {
-			log.Println(err)
-		}
-		if cmd.Debug {
-			log.Println(podcasts)
-		}
-		newPodcast, err := getPodcast(cmd.AddName, cmd.AddFeedURL)
-		podcasts, err = addPostcast(podcasts, newPodcast)
+		err = p.AddPostcast(cmd.AddName, cmd.AddFeedURL)
 		if err != nil {
 			log.Fatal(err)
 		} else {
-			savePodcasts(podcasts, c)
+			err = p.SavePodcasts()
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
 		os.Exit(0)
 	}
@@ -61,16 +70,11 @@ func main() {
 		if cmd.Debug {
 			log.Println("found check flag")
 		}
-		podcasts, err := loadPodcasts(c)
+		err := p.CheckPodcasts()
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
-		if len(podcasts) <= 0 {
-			log.Fatal("You haven't any podcasts added. Nothing to check for")
-		}
-		for i := 0; i < len(podcasts); i++ {
-			checkFeed(podcasts[i], c)
-		}
+		os.Exit(0)
 	}
 
 	//     _                     _                 _
@@ -83,16 +87,11 @@ func main() {
 		if cmd.Debug {
 			log.Println("found download flag")
 		}
-		podcasts, err := loadPodcasts(c)
+		err := p.DownloadPodcasts()
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
-		if len(podcasts) <= 0 {
-			log.Fatal("You haven't any podcasts added. Nothing to download")
-		}
-		for i := 0; i < len(podcasts); i++ {
-			downloadItems(podcasts[i], c)
-		}
+		os.Exit(0)
 	}
 
 	//           _     _    __ _ _ _
@@ -105,29 +104,18 @@ func main() {
 		if cmd.Debug {
 			log.Println("found addFilter flag")
 		}
-		podcasts, err := loadPodcasts(c)
+		err := p.AddFilter(cmd.AddFilterCondition, cmd.AddFilterField, cmd.AddFilterKeyword, cmd.AddFilterPodcastName)
 		if err != nil {
-			log.Println(err)
+			log.Fatal(err)
 		}
-		if len(podcasts) <= 0 {
-			log.Fatal("You haven't any podcasts added. Not possible to add a filter to a podcast")
-		}
-		f, err := getFilter(cmd.AddFilterCondition, cmd.AddFilterField, cmd.AddFilterKeyword)
-		if err != nil {
-			fmt.Println("Error creating filter:", err)
-			os.Exit(1)
-		}
-		podcasts, err = addFilterToPostcast(f, cmd.AddFilterPodcastName, podcasts)
-		if err != nil {
-			fmt.Println("Failed adding filter to podcast", cmd.AddFilterPodcastName, "with error:", err)
-			os.Exit(1)
-		}
-		err = savePodcasts(podcasts, c)
+		err = p.SavePodcasts()
 		if err != nil {
 			fmt.Println("Error while saving podcasts config file:", err)
 			os.Exit(1)
 		}
-		fmt.Println("Added filter", f, "to podcast", cmd.AddFilterPodcastName)
+		fmt.Println("Added filter to podcast", cmd.AddFilterPodcastName)
+		os.Exit(0)
+
 	}
 
 	if cmd.Debug {

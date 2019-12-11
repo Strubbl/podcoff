@@ -1,3 +1,3 @@
 package podcoff
 
-const version = "0.1"
+const Version = "0.1"
