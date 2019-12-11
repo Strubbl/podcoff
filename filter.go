@@ -1,10 +1,11 @@
-package main
+package podcoff
 
 import (
 	"errors"
 	"log"
-	"podcoff/cmd"
 	"strings"
+
+	"github.com/strubbl/podcoff/cmd"
 )
 
 // Filter checks the given podcast item for a condition matching a keyword in a field of the feed item

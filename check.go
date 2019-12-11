@@ -1,8 +1,9 @@
-package main
+package podcoff
 
 import (
 	"fmt"
-	"podcoff/cmd"
+
+	"github.com/strubbl/podcoff/cmd"
 
 	"github.com/mmcdole/gofeed"
 )

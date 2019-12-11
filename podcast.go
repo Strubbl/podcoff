@@ -1,4 +1,4 @@
-package main
+package podcoff
 
 import (
 	"encoding/json"

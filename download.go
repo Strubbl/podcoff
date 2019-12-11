@@ -1,12 +1,13 @@
-package main
+package podcoff
 
 import (
 	"errors"
 	"fmt"
 	"os/exec"
-	"podcoff/cmd"
 	"strings"
 	"sync"
+
+	"github.com/strubbl/podcoff/cmd"
 )
 
 func downloadItems(p Podcast, c Configuration) error {

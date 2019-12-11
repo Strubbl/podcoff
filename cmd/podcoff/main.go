@@ -1,10 +1,10 @@
-package main
+package podcoff
 
 import (
 	"fmt"
 	"log"
 	"os"
-	"podcoff/cmd"
+	"github.com/strubbl/podcoff"
 )
 
 func main() {
