@@ -22,6 +22,31 @@ func (p *Podcoff) DownloadPodcasts() error {
 	return nil
 }
 
+func (p *Podcoff) MarkPodcastsAsSkipped(podcastName string) error {
+	var pc Podcast
+	for i := 0; i < len(p.Podcasts); i++ {
+		if p.Podcasts[i].Name == podcastName {
+			pc = p.Podcasts[i]
+			break
+		}
+	}
+	pis, err := p.loadPodcastItems(pc)
+	if err != nil {
+		return err
+	}
+	// mark all items, which are fresh, as skipped now
+	for i := 0; i < len(pis); i++ {
+		if pis[i].Status == FRESH {
+			pis[i].Status = SKIPPED
+		}
+	}
+	err = p.savePodcastItems(pis, pc)
+	if err != nil {
+		return err
+	}
+	return err
+}
+
 func (p *Podcoff) downloadItems(pc Podcast) error {
 	pis, err := p.loadPodcastItems(pc)
 	if err != nil {

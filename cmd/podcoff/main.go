@@ -115,10 +115,26 @@ func main() {
 		}
 		fmt.Println("Added filter to podcast", cmd.AddFilterPodcastName)
 		os.Exit(0)
-
 	}
 
-	if cmd.Debug {
-		log.Println("Finish program")
+	//                      _                      _    _                      _
+	// _ __ ___   __ _ _ __| | __   __ _ ___   ___| | _(_)_ __  _ __   ___  __| |
+	//| '_ ` _ \ / _` | '__| |/ /  / _` / __| / __| |/ / | '_ \| '_ \ / _ \/ _` |
+	//| | | | | | (_| | |  |   <  | (_| \__ \ \__ \   <| | |_) | |_) |  __/ (_| |
+	//|_| |_| |_|\__,_|_|  |_|\_\  \__,_|___/ |___/_|\_\_| .__/| .__/ \___|\__,_|
+	//                                                   |_|   |_|
+	if cmd.MarkSkippedPodcastName != "" {
+		if cmd.Debug {
+			log.Println("found markSkipped flag")
+		}
+		err := p.MarkPodcastsAsSkipped(cmd.MarkSkippedPodcastName)
+		if err != nil {
+			fmt.Println("Error while saving podcasts config file:", err)
+			os.Exit(1)
+		}
+		if p.Verbose {
+			log.Println("Marked podcast items as skipped", cmd.MarkSkippedPodcastName)
+		}
+		os.Exit(0)
 	}
-}
+} // main()
