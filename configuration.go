@@ -2,6 +2,7 @@ package podcoff
 
 import (
 	"encoding/json"
+	"errors"
 	"io/ioutil"
 	"log"
 	"os"
@@ -65,6 +66,9 @@ func (p *Podcoff) loadConfig(configPath string) error {
 	err = decoder.Decode(&p.Config)
 	if err != nil {
 		return err
+	}
+	if (Configuration{}) == p.Config {
+		return errors.New("Config file found, but marshalling json content of it returned empty config")
 	}
 	if p.Debug {
 		log.Println("Config loaded:", (*p).Config)
