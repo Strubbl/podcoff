@@ -7,16 +7,15 @@ import (
 	"os"
 )
 
-const defaultConfigPath = "config.json"
+const DefaultConfigPath = "config.json"
 
-const defaultDatabasePath = "podcasts.json"
-const defaultDownloadHandler = "wget"
-const defaultDownloadsPath = "downloads"
-const defaultMetadataPath = "metadata"
+const DefaultDatabasePath = "podcasts.json"
+const DefaultDownloadHandler = "wget"
+const DefaultDownloadsPath = "downloads"
+const DefaultMetadataPath = "metadata"
 
 // Configuration file for podcoff
 type Configuration struct {
-	CachePath       string
 	DatabasePath    string
 	DownloadHandler string
 	DownloadsPath   string
@@ -25,16 +24,16 @@ type Configuration struct {
 
 func getDefaultConfiguration() Configuration {
 	var c Configuration
-	c.DatabasePath = defaultDatabasePath
-	c.DownloadHandler = defaultDownloadHandler
-	c.DownloadsPath = defaultDownloadsPath
-	c.MetadataPath = defaultMetadataPath
+	c.DatabasePath = DefaultDatabasePath
+	c.DownloadHandler = DefaultDownloadHandler
+	c.DownloadsPath = DefaultDownloadsPath
+	c.MetadataPath = DefaultMetadataPath
 	return c
 }
 
 func (p *Podcoff) loadConfig(configPath string) error {
 	if configPath == "" {
-		configPath = defaultConfigPath
+		configPath = DefaultConfigPath
 		if p.Debug {
 			log.Println("no configPath given, using default path:", configPath)
 		}
