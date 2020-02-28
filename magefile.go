@@ -32,10 +32,12 @@ func verify() error {
 }
 
 func UpdateVendor() error {
-	mg.Deps(tidy)
-	mg.Deps(verify)
 	fmt.Println("+ updatevendor")
-	return nil
+	err := sh.Run("go", "get", "-u", "./...")
+	if err != nil {
+		return err
+	}
+	return tidy()
 }
 
 func getLint() error {
