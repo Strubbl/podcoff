@@ -19,9 +19,10 @@ var rootCmd = &cobra.Command{
 	Long: `podcoff is a cli application to download podcasts.
 
 It is inspired by the famous greg application, which is not actively maintained anymore.`,
+	Version: programVersion,
 	// Uncomment the following line if your bare application
 	// has an action associated with it:
-	//	Run: func(cmd *cobra.Command, args []string) { },
+	//Run: func(cmd *cobra.Command, args []string) {},
 }
 
 // Execute adds all child commands to the root command and sets flags appropriately.
@@ -39,6 +40,5 @@ func init() {
 	// will be global for your application.
 	rootCmd.PersistentFlags().StringVar(&ConfigJSON, "config", "", "config file (default is defaultConfigJSON)")
 	rootCmd.PersistentFlags().BoolVarP(&Debug, "debug", "", false, "debug output")
-	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "", false, "verbose output")
-	rootCmd.PersistentFlags().BoolVarP(&Version, "version", "v", false, "print version")
+	rootCmd.PersistentFlags().BoolVarP(&Verbose, "verbose", "v", false, "verbose output")
 }

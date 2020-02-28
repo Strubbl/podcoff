@@ -13,14 +13,6 @@ func main() {
 	log.SetOutput(os.Stdout)
 	log.SetFlags(log.LstdFlags | log.Lshortfile)
 	cmd.Execute()
-
-	// root command flags
-	// check for add command used
-	if cmd.Version {
-		fmt.Println(podcoff.Version)
-		os.Exit(0)
-	}
-
 	p := &podcoff.Podcoff{}
 	// subcommands
 	// for all following command blocks we need the initialized podcoff instance
