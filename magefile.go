@@ -43,9 +43,11 @@ func getLint() error {
 }
 
 func Lint() error {
+	// we have to go mod tidy after linting to clean up go.mod and go.sum
+	defer tidy()
 	mg.Deps(getLint)
 	fmt.Println("+ lint")
-	if err := sh.RunV("golint", "-set_exit_status", "./..."); err != nil {
+	if err := sh.RunV("golint", "./..."); err != nil {
 		return fmt.Errorf("error running lint: %v", err)
 	}
 	return nil
@@ -53,7 +55,7 @@ func Lint() error {
 
 func Test() error {
 	fmt.Println("+ test")
-	return sh.Run("go", "test", "./...")
+	return sh.RunV("go", "test", "./...")
 }
 
 func Vet() error {
