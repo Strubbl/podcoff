@@ -8,6 +8,7 @@ type Podcoff struct {
 	Debug    bool
 }
 
+// Init initializes the podcoff, which means it loads the config and the database
 func (p *Podcoff) Init(configPath string) error {
 	err := (*p).loadConfig(configPath)
 	if err != nil {

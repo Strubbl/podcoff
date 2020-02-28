@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Check is used as a flag to make podcoff check all feeds for new items
 var Check bool
 
 // checkCmd represents the check command

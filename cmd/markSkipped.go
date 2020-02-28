@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// MarkSkippedPodcastName represents the name of the podcasts which shall be marked as skipped
 var MarkSkippedPodcastName string
 
 // markSkippedCmd represents the markSkipped command
@@ -17,7 +18,7 @@ var markSkippedCmd = &cobra.Command{
 }
 
 func init() {
-	markSkippedCmd.Flags().StringVarP(&MarkSkippedPodcastName, "podcast", "", "", "name of the podcast you want to edit")
+	markSkippedCmd.Flags().StringVarP(&MarkSkippedPodcastName, "podcast", "", "", "name of the podcast you want to mark as skipped")
 	markSkippedCmd.MarkFlagRequired("podcast")
 	rootCmd.AddCommand(markSkippedCmd)
 }

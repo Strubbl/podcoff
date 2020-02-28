@@ -7,10 +7,14 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// ConfigJSON holds the path to the config file
 var ConfigJSON string
+
+// Debug holds the flag for debug output
 var Debug bool
+
+// Verbose holds the flag for verbose output
 var Verbose bool
-var Version bool
 
 // rootCmd represents the base command when called without any subcommands
 var rootCmd = &cobra.Command{

@@ -4,9 +4,16 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// AddFilterCondition is the condition for the new filter
 var AddFilterCondition string
+
+// AddFilterField is the field of the feed, which the new filter shall be applied on
 var AddFilterField string
+
+// AddFilterKeyword is the search keyword for the new filter
 var AddFilterKeyword string
+
+// AddFilterPodcastName is the name of the podcast for which the new filter is
 var AddFilterPodcastName string
 
 // addFilterCmd represents the addFilter command

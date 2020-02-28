@@ -6,7 +6,10 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// AddName represents the name of the podcast, which is going to be added
 var AddName string
+
+// AddFeedURL represents the URL of the podcast, which is going to be added
 var AddFeedURL string
 
 const numOfAddArgsAllowed = 2

@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 )
 
+// Download is used as a flag to make podcoff download all new podcasts
 var Download bool
 
 // downloadCmd represents the download command

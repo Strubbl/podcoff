@@ -15,6 +15,7 @@ type Filter struct {
 	Field     string // currently only title
 }
 
+// AddFilter adds a filter rule to a podcast
 func (p *Podcoff) AddFilter(condition, field, keyword, podcastName string) error {
 	podcasts := (*p).Podcasts
 	if len(podcasts) <= 0 {

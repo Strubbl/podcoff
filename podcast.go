@@ -7,7 +7,7 @@ import (
 	"os"
 )
 
-// podcast represents one podcast with its metadata, name, url, download handler etc.
+// Podcast represents one podcast with its metadata, name, url, download handler etc.
 type Podcast struct {
 	Name            string
 	FeedURL         string
@@ -33,6 +33,7 @@ func (p *Podcoff) loadPodcasts() error {
 	return nil
 }
 
+// SavePodcasts writes all podcast data to the database
 func (p *Podcoff) SavePodcasts() error {
 	b, err := json.MarshalIndent((*p).Podcasts, "", "	")
 	if err != nil {
@@ -45,6 +46,7 @@ func (p *Podcoff) SavePodcasts() error {
 	return nil
 }
 
+// AddPostcast adds a podcast to the database
 func (p *Podcoff) AddPostcast(name string, url string) error {
 	newPodcast, err := createPodcast(name, url)
 	if err != nil {

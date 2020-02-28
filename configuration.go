@@ -8,14 +8,22 @@ import (
 	"os"
 )
 
+// DefaultConfigPath contains the default file path for the config
 const DefaultConfigPath = "config.json"
 
+// DefaultDatabasePath contains the default file path for the database
 const DefaultDatabasePath = "podcasts.json"
+
+// DefaultDownloadHandler contains the default executable being used for the item download
 const DefaultDownloadHandler = "wget"
+
+// DefaultDownloadsPath contains the default file path where all the downloads are saved
 const DefaultDownloadsPath = "downloads"
+
+// DefaultMetadataPath contains the default file path where all feed metadata is saved
 const DefaultMetadataPath = "metadata"
 
-// Configuration file for podcoff
+// Configuration represents the config file for podcoff
 type Configuration struct {
 	DatabasePath    string
 	DownloadHandler string

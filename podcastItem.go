@@ -8,8 +8,10 @@ import (
 
 const jsonFileEnding = ".json"
 
+// PodcastItemDownloadStatus is used as an enum to represent the download status of a podcast item
 type PodcastItemDownloadStatus int
 
+// FRESH and all following consts are used as enum for PodcastItemDownloadStatus
 const (
 	FRESH = iota
 	SUCCESS
@@ -17,7 +19,7 @@ const (
 	SKIPPED
 )
 
-// Podcast represents one podcast item with its metadata
+// PodcastItem represents one podcast item with its metadata
 type PodcastItem struct {
 	Link   string
 	Status int

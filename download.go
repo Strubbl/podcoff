@@ -11,6 +11,7 @@ import (
 	"github.com/strubbl/podcoff/cmd"
 )
 
+// DownloadPodcasts starts the download for all new podcast items
 func (p *Podcoff) DownloadPodcasts() error {
 	podcasts := (*p).Podcasts
 	if len(podcasts) <= 0 {
@@ -22,6 +23,7 @@ func (p *Podcoff) DownloadPodcasts() error {
 	return nil
 }
 
+// MarkPodcastsAsSkipped uses the podcast name and marks this podcasts as skipped, so that there will be no downloads until there are new items
 func (p *Podcoff) MarkPodcastsAsSkipped(podcastName string) error {
 	var pc Podcast
 	for i := 0; i < len(p.Podcasts); i++ {
@@ -96,7 +98,7 @@ func (p *Podcoff) downloadPodcastItem(item PodcastItem, pc Podcast) error {
 	command := downloadHandler + " " + item.Link
 	var wg sync.WaitGroup
 	wg.Add(1)
-	out, err := exe_cmd(downloadFolder, command, &wg)
+	out, err := executeCmd(downloadFolder, command, &wg)
 	if p.Debug && out != "" {
 		fmt.Println("downloadPodcastItem: command output:\n", out)
 	}
@@ -104,7 +106,7 @@ func (p *Podcoff) downloadPodcastItem(item PodcastItem, pc Podcast) error {
 }
 
 // based on https://stackoverflow.com/a/20438245/709697
-func exe_cmd(directory string, command string, wg *sync.WaitGroup) (string, error) {
+func executeCmd(directory string, command string, wg *sync.WaitGroup) (string, error) {
 	if cmd.Debug {
 		fmt.Println("exec command is:", command)
 	}

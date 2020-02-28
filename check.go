@@ -8,6 +8,7 @@ import (
 	"github.com/mmcdole/gofeed"
 )
 
+// CheckPodcasts loads all feeds and checks for new items
 func (p *Podcoff) CheckPodcasts() error {
 	podcasts := (*p).Podcasts
 	if len(podcasts) <= 0 {
