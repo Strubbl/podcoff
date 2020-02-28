@@ -117,6 +117,12 @@ func Build() error {
 	return err
 }
 
+func Install() error {
+	mg.Deps(Build)
+	fmt.Println("+ install")
+	return sh.Run("go", "install", ".")
+}
+
 func Clean() {
 	fmt.Println("+ clean")
 	os.RemoveAll(binary)
