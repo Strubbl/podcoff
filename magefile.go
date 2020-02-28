@@ -105,16 +105,32 @@ func Build() error {
 	if err != nil {
 		return err
 	}
-	fmt.Println(out)
-	err = sh.Run("go", "build", "-o", binary, "cmd/"+binary+"/main.go")
+	err = regularBuild()
 	if err != nil {
 		return err
 	}
+	fmt.Println(out)
 	err = sh.Run("git", "checkout", versionFileName)
 	if err != nil {
 		return err
 	}
 	return err
+}
+
+func regularBuild() error {
+	return sh.Run("go", "build", "-o", binary, "cmd/"+binary+"/main.go")
+}
+
+func CiBuild() error {
+	mg.Deps(tidy)
+	mg.Deps(verify)
+	return regularBuild()
+}
+
+func CiInstall() error {
+	mg.Deps(CiBuild)
+	fmt.Println("+ install")
+	return sh.Run("go", "install", ".")
 }
 
 func Install() error {

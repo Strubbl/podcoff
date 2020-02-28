@@ -5,9 +5,11 @@ go:
   - "1.13"
   - "1.14"
   - "tip"
+env:
+  - GO111MODULE=on
 before_install:
   - go get -u github.com/magefile/mage
 install:
-  - mage install
+  - mage ciinstall
 script:
-  - mage all
+  - mage check
