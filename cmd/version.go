@@ -1,3 +1,3 @@
 package cmd
 
-var programVersion = "master"
+const programVersion = "master"
