@@ -8,8 +8,7 @@ go:
   - "1.14"
   - "tip"
 before_install:
-  - go get -u -d github.com/magefile/mage
-  - cd $GOPATH/src/github.com/magefile/mage && go run bootstrap.go
+  - go get -u github.com/magefile/mage
 install:
   - mage install
 script:
