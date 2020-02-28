@@ -37,7 +37,11 @@ func UpdateVendor() error {
 	if err != nil {
 		return err
 	}
-	return tidy()
+	err = tidy()
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func getLint() error {
@@ -58,6 +62,11 @@ func Lint() error {
 func Test() error {
 	fmt.Println("+ test")
 	return sh.RunV("go", "test", "./...")
+}
+
+func TestAll() error {
+	fmt.Println("+ testAll")
+	return sh.Run("go", "test", "all")
 }
 
 func Vet() error {
@@ -123,12 +132,14 @@ func regularBuild() error {
 	return sh.Run("go", "build", "-o", binary, "cmd/"+binary+"/main.go")
 }
 
+// only used in travis
 func CiBuild() error {
 	mg.Deps(tidy)
 	mg.Deps(verify)
 	return regularBuild()
 }
 
+// only used in travis
 func CiInstall() error {
 	mg.Deps(CiBuild)
 	fmt.Println("+ install")
@@ -154,9 +165,8 @@ func Check() {
 	mg.Deps(Test)
 }
 
-// clean, build
+// clean build check (fmt lint test vet)
 func All() {
-	// clean build check (fmt lint test vet)
 	fmt.Println("+ all")
 	mg.Deps(Clean)
 	mg.Deps(Build)
