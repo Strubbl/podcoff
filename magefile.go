@@ -13,7 +13,7 @@ import (
 	"github.com/magefile/mage/sh"
 )
 
-const versionFileName = "version.go"
+const versionFileName = "cmd/version.go"
 
 // Default target
 // If not set, running mage will list available targets
@@ -98,7 +98,7 @@ func Build() error {
 	if err != nil {
 		return err
 	}
-	sedExpr := strings.Join([]string{"s/const Version = \"master\"/var Version = \"", out, "\"/g"}, "")
+	sedExpr := strings.Join([]string{"s/const programVersion = \"master\"/var programVersion = \"", out, "\"/g"}, "")
 	err = sh.Run("sed", "-i", sedExpr, versionFileName)
 	if err != nil {
 		return err
